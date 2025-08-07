@@ -14,6 +14,8 @@ Some of the data displayed:
 Supports easily changing the data bucket, host and sensors.
 Data is sourced from InfluxDB 2.x using Flux.
 
+![v1.0 Overview](v1.0-overview.png)
+
 ## Requirements:
 
 For best results you will need:
