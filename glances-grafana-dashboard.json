@@ -21,7 +21,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "12.0.0-85518.patch7-85777"
+      "version": "12.1.0"
     },
     {
       "type": "panel",
@@ -114,7 +114,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -150,7 +151,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "column": "cpucore",
@@ -245,7 +246,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -277,7 +279,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "1min",
@@ -452,7 +454,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -488,7 +491,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "column": "total",
@@ -583,7 +586,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -615,7 +619,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "User",
@@ -810,7 +814,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -874,7 +879,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "Used",
@@ -1024,7 +1029,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1056,7 +1062,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "In",
@@ -1196,7 +1202,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1260,7 +1267,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "Used",
@@ -1390,7 +1397,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1422,7 +1430,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "Read",
@@ -1529,7 +1537,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1570,7 +1579,7 @@
         "sizing": "manual",
         "valueMode": "color"
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "Used",
@@ -1695,7 +1704,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1709,7 +1719,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "memory_usage"
+              "options": "adjusted_memory_usage"
             },
             "properties": [
               {
@@ -1740,14 +1750,14 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDB}"
           },
-          "query": "from(bucket:\"${Bucket}\")\r\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"containers\" and\r\n    r._field == \"memory_usage\" and\r\n    r.hostname == \"${host}\"\r\n  )\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"MEM\")",
+          "query": "from(bucket: \"${Bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"containers\" and\r\n    (r._field == \"memory_usage\" or r._field == \"memory_inactive_file\") and\r\n    r.hostname == \"${host}\"\r\n  )\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n    r with\r\n    adjusted_memory_usage: if exists r.memory_inactive_file then r.memory_usage - r.memory_inactive_file else r.memory_usage\r\n  }))\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, column: \"adjusted_memory_usage\", createEmpty: false)\r\n  |> yield(name: \"MEM\")",
           "refId": "A"
         }
       ],
@@ -1833,7 +1843,7 @@
           "unit": "celsius"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "AmbientTemperature",
@@ -1954,7 +1964,7 @@
           "unit": "celsius"
         }
       },
-      "pluginVersion": "12.0.0-85518.patch7-85777",
+      "pluginVersion": "12.1.0",
       "targets": [
         {
           "alias": "CpuTemperature",
@@ -2367,6 +2377,6 @@
   "timezone": "browser",
   "title": "Glances [Flux]",
   "uid": "ZEITGE1ST",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
