@@ -24,12 +24,6 @@
       "version": "12.1.0"
     },
     {
-      "type": "panel",
-      "id": "heatmap",
-      "name": "Heatmap",
-      "version": ""
-    },
-    {
       "type": "datasource",
       "id": "influxdb",
       "name": "InfluxDB",
@@ -275,7 +269,8 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "hoverProximity": 1000,
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -615,7 +610,8 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "hoverProximity": 1000,
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -875,8 +871,9 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "pluginVersion": "12.1.0",
@@ -1058,6 +1055,7 @@
         },
         "tooltip": {
           "hideZeros": false,
+          "hoverProximity": 1000,
           "mode": "multi",
           "sort": "none"
         }
@@ -1150,7 +1148,7 @@
           "target": ""
         }
       ],
-      "title": "$interface network interface",
+      "title": "Network Interface: $interface",
       "type": "timeseries"
     },
     {
@@ -1263,8 +1261,9 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "pluginVersion": "12.1.0",
@@ -1426,7 +1425,8 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "hoverProximity": 1000,
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1516,7 +1516,7 @@
           "target": ""
         }
       ],
-      "title": "$disk disk IO",
+      "title": "Disk IO: $disk",
       "type": "timeseries"
     },
     {
@@ -1724,7 +1724,7 @@
             "properties": [
               {
                 "id": "unit",
-                "value": "decbytes"
+                "value": "bytes"
               }
             ]
           }
@@ -1746,6 +1746,7 @@
         },
         "tooltip": {
           "hideZeros": false,
+          "hoverProximity": 1000,
           "mode": "multi",
           "sort": "desc"
         }
@@ -1772,6 +1773,130 @@
         "x": 0,
         "y": 41
       },
+      "id": 41,
+      "panels": [],
+      "title": "All Containers CPU(%)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cpu_percent"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "query": "from(bucket: \"${Bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"containers\" and\r\n    r._field == \"cpu_percent\" and\r\n    r.hostname == \"${host}\"\r\n  )\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"CPU\")",
+          "refId": "A"
+        }
+      ],
+      "title": "All Containers CPU(%)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
       "id": 33,
       "panels": [],
       "title": "Sensors $host",
@@ -1784,16 +1909,58 @@
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
-          }
+          },
+          "displayName": "${Sensor}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -1801,46 +1968,21 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 55
       },
       "id": 21,
       "options": {
-        "calculate": true,
-        "calculation": {},
-        "cellGap": 2,
-        "cellValues": {},
-        "color": {
-          "exponent": 0.5,
-          "fill": "rgb(255, 0, 0)",
-          "mode": "opacity",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 128
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
         "legend": {
-          "show": false
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "right",
+          "showLegend": false
         },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "showValue": "never",
         "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "min": "0",
-          "reverse": false,
-          "unit": "celsius"
+          "hideZeros": false,
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "12.1.0",
@@ -1865,7 +2007,7 @@
           "measurement": "sensors",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"sensors\" and\n    r._field == \"value\" and\n    r.label == \"Ambient\" and\n    r.hostname == \"${host}\"\n  )\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"Ambient\")\n  \n  ",
+          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"sensors\" and\n    r._field == \"value\" and\n    r.label == \"${Sensor}\" and\n    r.hostname == \"${host}\"\n  )\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"${Sensor}\")\n  \n  ",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1895,8 +2037,8 @@
           ]
         }
       ],
-      "title": "Ambient temperature",
-      "type": "heatmap"
+      "title": "Sensor: ${Sensor} Temperature",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1905,16 +2047,58 @@
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
-          }
+          },
+          "displayName": "${__field.labels.label}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
         },
         "overrides": []
       },
@@ -1922,46 +2106,21 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 55
       },
       "id": 23,
       "options": {
-        "calculate": true,
-        "calculation": {},
-        "cellGap": 2,
-        "cellValues": {},
-        "color": {
-          "exponent": 0.5,
-          "fill": "rgb(255, 0, 0)",
-          "mode": "opacity",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 128
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
         "legend": {
-          "show": false
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "right",
+          "showLegend": false
         },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "showValue": "never",
         "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "min": "0",
-          "reverse": false,
-          "unit": "celsius"
+          "hideZeros": false,
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "pluginVersion": "12.1.0",
@@ -1986,7 +2145,7 @@
           "measurement": "sensors",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"sensors\" and\n    r._field == \"value\" and\n    r.label == \"${Sensor}\" and\n    r.hostname == \"${host}\"\n  )\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"Ambient\")\n  \n  ",
+          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"sensors\" and\n    r._field == \"value\" and\n    r.label =~ /^Core/ and\n    r.hostname == \"${host}\"\n  )\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"${Sensor}\")\n  \n  ",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -2016,8 +2175,8 @@
           ]
         }
       ],
-      "title": "CPU temperature using ${Sensor}",
-      "type": "heatmap"
+      "title": "CPU Temperature",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -2025,7 +2184,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 48
+        "y": 61
       },
       "id": 37,
       "panels": [],
@@ -2043,9 +2202,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2054,6 +2217,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 2,
             "pointSize": 5,
@@ -2076,7 +2240,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2103,13 +2268,17 @@
               {
                 "id": "unit",
                 "value": "percent"
+              },
+              {
+                "id": "displayName",
+                "value": "CPU"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "memory_usage"
+              "options": "adjusted_memory_usage"
             },
             "properties": [
               {
@@ -2121,11 +2290,15 @@
               },
               {
                 "id": "unit",
-                "value": "decbytes"
+                "value": "bytes"
               },
               {
                 "id": "custom.fillOpacity",
                 "value": 36
+              },
+              {
+                "id": "displayName",
+                "value": "Memory"
               }
             ]
           }
@@ -2135,7 +2308,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 49
+        "y": 62
       },
       "id": 25,
       "options": {
@@ -2146,10 +2319,13 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "hideZeros": false,
+          "hoverProximity": 1000,
+          "mode": "multi",
+          "sort": "none"
         }
       },
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "12.1.0",
       "repeat": "container",
       "repeatDirection": "v",
       "targets": [
@@ -2173,7 +2349,7 @@
           "measurement": "containers",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"containers\" and\n    r._field == \"memory_usage\" and\n    r.name == \"${container}\" and\n    r.hostname == \"${host}\"\n  )\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"MEM\")\n  \n  ",
+          "query": "from(bucket:\"${Bucket}\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"containers\" and\n    (r._field == \"memory_usage\" or r._field == \"memory_inactive_file\") and\n    r.name == \"${container}\" and\n    r.hostname == \"${host}\"\n  )\n    |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({\n    r with\n    adjusted_memory_usage: if exists r.memory_inactive_file then r.memory_usage - r.memory_inactive_file else r.memory_usage\n  }))\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, column: \"adjusted_memory_usage\", createEmpty: false)\n  |> yield(name: \"MEM\")\n  \n  ",
           "rawQuery": false,
           "refId": "B",
           "resultFormat": "time_series",
@@ -2258,17 +2434,13 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "10s",
   "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": true,
-          "text": "glances",
-          "value": "glances"
-        },
+        "current": {},
         "datasource": {
           "type": "influxdb",
           "uid": "${DS_INFLUXDB}"
@@ -2304,12 +2476,13 @@
           "type": "influxdb",
           "uid": "${DS_INFLUXDB}"
         },
-        "definition": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.name != \"\")\n  |> distinct(column: \"name\")\n  |> keep(columns: [\"name\"])\n  |> rename(columns: {name: \"_value\"})",
+        "definition": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r._measurement == \"containers\" and r.name != \"\")\n  |> distinct(column: \"name\")\n  |> keep(columns: [\"name\"])\n  |> rename(columns: {name: \"_value\"})",
         "includeAll": true,
+        "label": "Container",
         "multi": true,
         "name": "container",
         "options": [],
-        "query": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.name != \"\")\n  |> distinct(column: \"name\")\n  |> keep(columns: [\"name\"])\n  |> rename(columns: {name: \"_value\"})",
+        "query": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r._measurement == \"containers\" and r.name != \"\")\n  |> distinct(column: \"name\")\n  |> keep(columns: [\"name\"])\n  |> rename(columns: {name: \"_value\"})",
         "refresh": 1,
         "regex": "",
         "sort": 1,
@@ -2323,6 +2496,7 @@
         },
         "definition": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.interface_name != \"\")\n  |> distinct(column: \"interface_name\")\n  |> keep(columns: [\"interface_name\"])\n  |> rename(columns: {interface_name: \"_value\"})",
         "includeAll": false,
+        "label": "Network Interface",
         "name": "interface",
         "options": [],
         "query": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.interface_name != \"\")\n  |> distinct(column: \"interface_name\")\n  |> keep(columns: [\"interface_name\"])\n  |> rename(columns: {interface_name: \"_value\"})",
@@ -2339,6 +2513,7 @@
         },
         "definition": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.disk_name != \"\")\n  |> distinct(column: \"disk_name\")\n  |> keep(columns: [\"disk_name\"])\n  |> rename(columns: {disk_name: \"_value\"})",
         "includeAll": false,
+        "label": "Disk",
         "name": "disk",
         "options": [],
         "query": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r.disk_name != \"\")\n  |> distinct(column: \"disk_name\")\n  |> keep(columns: [\"disk_name\"])\n  |> rename(columns: {disk_name: \"_value\"})",
@@ -2348,17 +2523,14 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": "Package id 0",
-          "value": "Package id 0"
-        },
+        "current": {},
         "datasource": {
           "type": "influxdb",
           "uid": "${DS_INFLUXDB}"
         },
         "definition": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) =>  r._measurement == \"sensors\" and r._field == \"value\" and r.hostname == \"${host}\" and r.label != \"\")\n  |> distinct(column: \"label\")\n  |> keep(columns: [\"label\"])\n  |> rename(columns: {label: \"_value\"})",
         "includeAll": false,
+        "label": "Temp Sensor",
         "name": "Sensor",
         "options": [],
         "query": "from(bucket: \"${Bucket}\")\n  |> range(start: -1d)\n  |> filter(fn: (r) =>  r._measurement == \"sensors\" and r._field == \"value\" and r.hostname == \"${host}\" and r.label != \"\")\n  |> distinct(column: \"label\")\n  |> keep(columns: [\"label\"])\n  |> rename(columns: {label: \"_value\"})",
@@ -2370,13 +2542,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Glances [Flux]",
   "uid": "ZEITGE1ST",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
