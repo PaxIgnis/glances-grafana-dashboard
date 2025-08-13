@@ -1,6 +1,4 @@
-## What does it do?
-
-Displays system monitoring data collected using [Glances](https://github.com/nicolargo/glances) in a Grafana dashboard.
+Displays system monitoring data collected using [Glances](https://github.com/nicolargo/glances) in a Grafana dashboard with a focus on docker containers.
 
 Some of the data displayed:
 
@@ -8,13 +6,13 @@ Some of the data displayed:
 - Mount point storage used
 - Disk IO
 - Sensor temperatures
-- Comprehensive table showing all containers memory usage
-- Individual tables for each container showing memory and cpu usage
+- Comprehensive tables showing all containers memory and CPU usage
+- Individual tables for each container showing memory and CPU usage
 
-Supports easily changing the data bucket, host and sensors.
+Supports easily changing the data bucket, host, selected containers, network interface, disk and temperature sensor.
 Data is sourced from InfluxDB 2.x using Flux.
 
-![v1.0 Overview](v1.0-overview.png)
+![v2.0 Overview](v2.0-overview.png)
 
 ## Requirements:
 
@@ -28,7 +26,7 @@ For best results you will need:
 ## How to use it?
 
 1. Deploy 3 docker containers: InfluxDB, Glances, Grafana.
-2. If you don't have one yet, deploy a new InfluxDB 2.x server and create a new bucket for glances.
+2. Setup InfluxDB 2.x server and create a new bucket for glances.
 3. Configure your glances.conf file to export data to InfluxDB, this is what the default looks like:
    ```
    [influxdb2]
@@ -42,6 +40,14 @@ For best results you will need:
 4. Start Glances with the export flag: `glances --export influxdb2`
 5. Open Grafana webui, and navigate to the add a new dashboard. Either copy the dashboard directly from here, or import from [grafana.com](https://grafana.com/grafana/dashboards/23211-glances-flux/).
 6. If you don't see data displayed, ensure you have selected the right bucket and host from the dropdowns.
+
+## Versions
+
+Latest release v2.0 tested with:
+
+- Glances 4.3.2
+- InfluxDB 2.7.1
+- Grafana 12.1.0
 
 ## Credits
 
